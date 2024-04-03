@@ -456,7 +456,7 @@ class Chrome(selenium.webdriver.chrome.webdriver.WebDriver):
                 stderr=subprocess.PIPE,
                 close_fds=IS_POSIX,
             )
-            self.browser_pid = browser.pid
+            self.browser = browser
 
 
         service = selenium.webdriver.chromium.service.ChromiumService(
@@ -775,7 +775,8 @@ class Chrome(selenium.webdriver.chrome.webdriver.WebDriver):
         except AttributeError:
             pass
         try:
-            os.kill(self.browser_pid, 15)
+            self.browser.terminate()
+            del self.browser
             logger.debug("gracefully closed browser")
         except Exception as e:  # noqa
             pass
